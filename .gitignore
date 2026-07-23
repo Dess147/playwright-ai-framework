@@ -1,3 +1,5 @@
+# Claude
+.claude/settings.local.json
 
 # Playwright
 node_modules/
