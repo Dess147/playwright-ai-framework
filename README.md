@@ -35,15 +35,19 @@ more efficiently.
 
 ## Current Status
 
-The project is currently under active development.
+The project is under active development and currently includes:
 
-Day 1 setup includes:
+- Playwright and TypeScript project configuration
+- Conduit RealWorld application configured as the Application Under Test
+- UI smoke coverage for the homepage
+- Successful and invalid login UI scenarios
+- Initial API coverage for the Conduit tags endpoint
+- GitHub Actions integration for automated test execution
+- Project-level Claude Code instructions, rules, and reusable skills
+- Skills for initializing and synchronizing Playwright rules across projects
+- Local and CI verification using Playwright tests and TypeScript checks
 
-- Playwright project initialization
-- TypeScript configuration
-- Basic example tests
-- GitHub Actions workflow
-- Initial project documentation
+The framework is intentionally being developed in small, reviewable iterations. More advanced components, such as API authentication, reusable fixtures, authentication state reuse, and Page Object Model abstractions, will be introduced only when justified by real test duplication or maintenance needs.
 
 ## Installation
 
