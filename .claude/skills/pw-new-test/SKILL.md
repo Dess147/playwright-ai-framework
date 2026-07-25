@@ -19,6 +19,7 @@ Read all existing spec files in `tests/` to understand:
 - Which `test.describe` block and file the new test belongs in
 - The conventions used (naming, grouping, beforeEach patterns)
 - Whether page objects or fixtures from `playwright-utils/` are available and relevant
+- This is a demo step in the skill.
 
 ### 2. Inspect application source code
 
