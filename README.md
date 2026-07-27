@@ -42,6 +42,7 @@ The project is under active development and currently includes:
 - UI smoke coverage for the homepage
 - Successful and invalid login UI scenarios
 - Initial API coverage for the Conduit tags endpoint
+- API authentication flow with token reuse
 - GitHub Actions integration for automated test execution
 - Project-level Claude Code instructions, rules, and reusable skills
 - Skills for initializing and synchronizing Playwright rules across projects
