@@ -31,3 +31,21 @@ test('logged-in user can fetch their own profile using the issued token', async 
 
   expect(profileBody.user.email).toBe(email);
 });
+
+test('invalid credentials are rejected without issuing a token', async ({ request }) => {
+  const loginResponse = await request.post('https://conduit-api.bondaracademy.com/api/users/login', {
+    data: {
+      user: {
+        email: 'nonexistent.user@example.com',
+        password: 'WrongPassword123!',
+      },
+    },
+  });
+
+  expect(loginResponse.status()).toBe(403);
+
+  const loginBody = await loginResponse.json();
+
+  expect(loginBody.user).toBeUndefined();
+  expect(loginBody.errors['email or password']).toContain('is invalid');
+});
