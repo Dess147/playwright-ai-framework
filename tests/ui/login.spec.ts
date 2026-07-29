@@ -1,31 +1,17 @@
-import { test, expect } from '@playwright/test';
+import { test } from '../../playwright-utils/fixtures';
 
-test('user can sign in with valid credentials', async ({ page }) => {
+test('user can sign in with valid credentials', async ({ pom }) => {
   const email = process.env.CONDUIT_USER_EMAIL;
   const password = process.env.CONDUIT_USER_PASSWORD;
-
   test.skip(
     !email || !password,
     'CONDUIT_USER_EMAIL and CONDUIT_USER_PASSWORD must be set to run this test'
   );
-
-  await page.goto('/login');
-
-  await page.getByPlaceholder('Email').fill(email!);
-  await page.getByPlaceholder('Password').fill(password!);
-  await page.getByRole('button', { name: 'Sign in' }).click();
-
-  await expect(page).toHaveURL('/');
-  await expect(page.getByRole('link', { name: 'Settings' })).toBeVisible();
+  await pom.loginPage.signInWithCredentials(email!, password!);
+  await pom.loginPage.expectSignedInSuccessfully();
 });
 
-test('invalid credentials show an error message', async ({ page }) => {
-  await page.goto('/login');
-
-  await page.getByPlaceholder('Email').fill('nonexistent.user@example.com');
-  await page.getByPlaceholder('Password').fill('WrongPassword123!');
-  await page.getByRole('button', { name: 'Sign in' }).click();
-
-  await expect(page.getByText('email or password is invalid')).toBeVisible();
-  await expect(page).toHaveURL(/\/login$/);
+test('invalid credentials show an error message', async ({ pom }) => {
+  await pom.loginPage.signInWithCredentials('nonexistent.user@example.com', 'WrongPassword123!');
+  await pom.loginPage.expectInvalidCredentialsError();
 });
