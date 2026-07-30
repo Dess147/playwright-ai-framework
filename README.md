@@ -38,41 +38,53 @@ The project currently includes:
 * Invalid login scenario
 * Create article UI scenario
 * API test for the Conduit tags endpoint
-* API authentication flow with token reuse
+* API authentication flow with token reuse and profile validation
 * `LoginPage` Page Object
 * `PageManager` for centralized Page Object access
-* Custom `pom` Playwright fixture
-* Environment-based credentials for authenticated UI tests
+* `AuthApi`, `UserApi`, and `TagsApi` API clients
+* `ApiManager` for centralized API client access
+* Custom `pom` and `api` Playwright fixtures
+* Environment-based credentials for authenticated UI and API tests
+* Cross-browser execution with Chromium, Firefox, and WebKit
 * GitHub Actions CI
+* Playwright HTML reporting and trace collection on retry
 * Reusable Claude Code rules and Playwright skills
 
 The framework is developed in small, reviewable iterations. New abstractions are introduced as the test suite grows and when they provide practical value.
 
-## Current POM Architecture
+## Current Framework Architecture
 
-```text id="o8gip1"
+```text
 playwright-utils/
-└── fixtures/
-    ├── index.ts
-    └── page-manager.ts
-
-pages/
-└── login-page.ts
+├── api/
+│   ├── auth-api.ts
+│   ├── tags-api.ts
+│   └── user-api.ts
+│
+├── fixtures/
+│   ├── api-manager.ts
+│   ├── index.ts
+│   └── page-manager.ts
+│
+└── pages/
+    └── login-page.ts
 ```
 
-The custom `pom` fixture provides a `PageManager`, which currently exposes the reusable `LoginPage`.
+The framework uses two custom Playwright fixtures: `pom` provides a `PageManager` for reusable UI interactions, and `api` provides an `ApiManager` for reusable API clients built on Playwright's `APIRequestContext`.
 
-```text id="i8y7m0"
-test
- ↓
-pom fixture
- ↓
-PageManager
- ↓
-LoginPage
+```text
+UI tests                          API tests
+
+test                               test
+ ↓                                  ↓
+pom fixture                        api fixture
+ ↓                                  ↓
+PageManager                        ApiManager
+ ↓                                  ↓
+LoginPage                          AuthApi / UserApi / TagsApi
 ```
 
-The current POM implementation covers the login flow. Other UI flows can be migrated to Page Objects when reusable interactions emerge.
+The current UI abstraction covers the login flow through `LoginPage`. The API layer separates authentication, user, and tags operations into dedicated clients, keeping API-only tests independent from the browser `page` fixture. Additional Page Objects and API clients are introduced only when reusable interactions or duplicated setup justify further abstraction.
 
 ## Test Coverage
 
@@ -160,7 +172,7 @@ AI-generated changes are reviewed and verified before being accepted into the fr
 
 * Extend Page Object coverage to additional UI flows
 * Authentication state reuse with `storageState`
-* Shared authenticated test setup
+* Shared authenticated UI test setup
 * Test data generation and cleanup
 * Additional article negative and edge-case scenarios
 * Broader UI and API regression coverage
