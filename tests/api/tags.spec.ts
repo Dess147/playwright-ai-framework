@@ -1,17 +1,6 @@
-import { test, expect } from '@playwright/test';
+import { test } from '../../playwright-utils/fixtures';
 
-test('GET /api/tags returns a list of tags', async ({ request }) => {
-  const response = await request.get('https://conduit-api.bondaracademy.com/api/tags');
-
-  expect(response.status()).toBe(200);
-  expect(response.headers()['content-type']).toContain('application/json');
-
-  const body = await response.json();
-
-  expect(Array.isArray(body.tags)).toBe(true);
-  expect(body.tags.length).toBeGreaterThan(0);
-
-  for (const tag of body.tags) {
-    expect(typeof tag).toBe('string');
-  }
+test('GET /api/tags returns a list of tags', async ({ api }) => {
+  await api.tagsApi.fetchTags();
+  await api.tagsApi.expectTagsListReturned();
 });
