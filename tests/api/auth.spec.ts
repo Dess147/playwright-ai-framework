@@ -1,6 +1,6 @@
-import { test, expect } from '@playwright/test';
+import { test } from '../../playwright-utils/fixtures';
 
-test('logged-in user can fetch their own profile using the issued token', async ({ request }) => {
+test('logged-in user can fetch their own profile using the issued token', async ({ api }) => {
   const email = process.env.CONDUIT_USER_EMAIL;
   const password = process.env.CONDUIT_USER_PASSWORD;
 
@@ -9,43 +9,14 @@ test('logged-in user can fetch their own profile using the issued token', async 
     'CONDUIT_USER_EMAIL and CONDUIT_USER_PASSWORD must be set to run this test'
   );
 
-  const loginResponse = await request.post('https://conduit-api.bondaracademy.com/api/users/login', {
-    data: { user: { email, password } },
-  });
+  await api.authApi.loginWithCredentials(email!, password!);
+  const token = await api.authApi.expectLoginSucceededAndReturnToken();
 
-  expect(loginResponse.status()).toBe(200);
-
-  const loginBody = await loginResponse.json();
-  const token = loginBody.user.token;
-
-  expect(typeof token).toBe('string');
-  expect(token.length).toBeGreaterThan(0);
-
-  const profileResponse = await request.get('https://conduit-api.bondaracademy.com/api/user', {
-    headers: { Authorization: `Token ${token}` },
-  });
-
-  expect(profileResponse.status()).toBe(200);
-
-  const profileBody = await profileResponse.json();
-
-  expect(profileBody.user.email).toBe(email);
+  await api.userApi.fetchProfileWithToken(token);
+  await api.userApi.expectProfileEmail(email!);
 });
 
-test('invalid credentials are rejected without issuing a token', async ({ request }) => {
-  const loginResponse = await request.post('https://conduit-api.bondaracademy.com/api/users/login', {
-    data: {
-      user: {
-        email: 'nonexistent.user@example.com',
-        password: 'WrongPassword123!',
-      },
-    },
-  });
-
-  expect(loginResponse.status()).toBe(403);
-
-  const loginBody = await loginResponse.json();
-
-  expect(loginBody.user).toBeUndefined();
-  expect(loginBody.errors['email or password']).toContain('is invalid');
+test('invalid credentials are rejected without issuing a token', async ({ api }) => {
+  await api.authApi.loginWithCredentials('nonexistent.user@example.com', 'WrongPassword123!');
+  await api.authApi.expectLoginRejected();
 });
