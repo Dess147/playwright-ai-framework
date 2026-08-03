@@ -1,5 +1,7 @@
 # Playwright AI Framework
 
+[![Playwright Tests](https://github.com/Dess147/playwright-ai-framework/actions/workflows/playwright.yml/badge.svg)](https://github.com/Dess147/playwright-ai-framework/actions/workflows/playwright.yml)
+
 An AI-assisted test automation framework built with Playwright and TypeScript.
 
 ## Project Goal
