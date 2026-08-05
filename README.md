@@ -39,9 +39,11 @@ The project currently includes:
 * Successful login scenario
 * Invalid login scenario
 * Create article UI scenario
+* Edit article UI scenario
+* Delete article UI scenario
 * API test for the Conduit tags endpoint
 * API authentication flow with token reuse and profile validation
-* `LoginPage` Page Object
+* `LoginPage`, `ArticleEditorPage`, `ArticlePage`, and `HeaderComponent` Page Objects
 * `PageManager` for centralized Page Object access
 * `AuthApi`, `UserApi`, and `TagsApi` API clients
 * `ApiManager` for centralized API client access
@@ -69,7 +71,24 @@ playwright-utils/
 │   └── page-manager.ts
 │
 └── pages/
+    ├── article-editor-page.ts
+    ├── article-page.ts
+    ├── header-component.ts
     └── login-page.ts
+```
+
+```text
+tests/
+├── api/
+│   ├── auth.spec.ts
+│   └── tags.spec.ts
+│
+└── ui/
+    ├── create-article.spec.ts
+    ├── delete-article.spec.ts
+    ├── edit-article.spec.ts
+    ├── homepage.spec.ts
+    └── login.spec.ts
 ```
 
 The framework uses two custom Playwright fixtures: `pom` provides a `PageManager` for reusable UI interactions, and `api` provides an `ApiManager` for reusable API clients built on Playwright's `APIRequestContext`.
@@ -83,10 +102,11 @@ pom fixture                        api fixture
  ↓                                  ↓
 PageManager                        ApiManager
  ↓                                  ↓
-LoginPage                          AuthApi / UserApi / TagsApi
+Page Objects                       AuthApi / UserApi / TagsApi
+(Login, Article, Header)
 ```
 
-The current UI abstraction covers the login flow through `LoginPage`. The API layer separates authentication, user, and tags operations into dedicated clients, keeping API-only tests independent from the browser `page` fixture. Additional Page Objects and API clients are introduced only when reusable interactions or duplicated setup justify further abstraction.
+The current UI abstraction covers the login flow through `LoginPage`, article authoring through `ArticleEditorPage` and `HeaderComponent`, and article viewing/deletion through `ArticlePage`. The API layer separates authentication, user, and tags operations into dedicated clients, keeping API-only tests independent from the browser `page` fixture. Additional Page Objects and API clients are introduced only when reusable interactions or duplicated setup justify further abstraction.
 
 ## Test Coverage
 
@@ -96,6 +116,8 @@ The current UI abstraction covers the login flow through `LoginPage`. The API la
 * Successful login
 * Invalid credentials validation
 * Create article flow
+* Edit an existing article
+* Delete an existing article
 
 ### API
 
@@ -124,6 +146,12 @@ npm install
 npx playwright install
 ```
 
+Alternatively, install browsers with their required system dependencies:
+
+```bash
+npm run install:browsers
+```
+
 ## Running Tests
 
 Run all tests:
@@ -142,6 +170,18 @@ Run headed:
 
 ```bash id="3pnzzj"
 npm run test:headed
+```
+
+Run in debug mode:
+
+```bash
+npm run test:debug
+```
+
+Run Chromium only:
+
+```bash
+npm run test:chromium
 ```
 
 Run TypeScript validation:
@@ -172,7 +212,7 @@ AI-generated changes are reviewed and verified before being accepted into the fr
 
 ## Planned Improvements
 
-* Extend Page Object coverage to additional UI flows
+* Migrate the homepage smoke test and create-article flow onto the `pom` fixture for consistency with the newer article tests
 * Authentication state reuse with `storageState`
 * Shared authenticated UI test setup
 * Test data generation and cleanup
