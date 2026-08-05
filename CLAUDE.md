@@ -17,26 +17,26 @@ The project is being implemented incrementally. Each change should be small, foc
 
 ## Current Project Status
 
-The initial Playwright scaffold has been configured for the Conduit application.
+The framework has grown beyond the initial scaffold into a working UI and API test suite for the Conduit application.
 
 Completed work includes:
 
-* Playwright with TypeScript initialized
-* GitHub Actions workflow available
-* `baseURL` configured as `https://conduit.bondaracademy.com`
-* generated Playwright example test removed
-* npm scripts added
-* TypeScript configuration added
+* Homepage UI smoke test (`tests/ui/homepage.spec.ts`)
+* Login UI scenarios — successful and invalid credentials (`tests/ui/login.spec.ts`)
+* Article UI scenarios — create, edit, and delete (`tests/ui/create-article.spec.ts`, `tests/ui/edit-article.spec.ts`, `tests/ui/delete-article.spec.ts`)
+* API tests for authentication and the tags endpoint (`tests/api/auth.spec.ts`, `tests/api/tags.spec.ts`)
+* A Page Object Model under `playwright-utils/pages/` (`LoginPage`, `ArticleEditorPage`, `ArticlePage`, `HeaderComponent`), exposed through `PageManager` and the custom `pom` fixture
+* API clients under `playwright-utils/api/` (`AuthApi`, `UserApi`, `TagsApi`), exposed through `ApiManager` and the custom `api` fixture
+* Environment-based credentials (`CONDUIT_USER_EMAIL`, `CONDUIT_USER_PASSWORD`) for authenticated tests
+* GitHub Actions CI running the full suite on push/PR to `main`
 
-The next implementation step is the first Conduit homepage UI smoke test:
+See `.claude/rules/playwright-architecture.md` for the current Page Object and fixture conventions — the "first UI tests" constraints under Architecture Rules below applied only before real duplication justified introducing a POM.
 
-`tests/ui/homepage.spec.ts`
+Planned next steps:
 
-The smoke test should verify that:
-
-* the Conduit homepage loads successfully;
-* a stable homepage heading, banner, or other meaningful element is visible;
-* the `Global Feed` tab is visible.
+* Migrate `homepage.spec.ts` and `create-article.spec.ts` onto the `pom` fixture for consistency with the newer article tests
+* Authentication state reuse with `storageState`
+* Additional article negative and edge-case scenarios
 
 ## Commands
 
@@ -78,9 +78,10 @@ Always use the existing npm scripts when an appropriate script is available.
 
 * `playwright.config.ts` — Playwright configuration, including the test directory, browser projects, reporter, retry behavior, trace settings, and the Conduit `baseURL`.
 * `tsconfig.json` — TypeScript configuration for the Playwright test project.
-* `tests/` — automated Playwright tests.
+* `tests/` — automated Playwright tests (spec files only).
 * `tests/ui/` — UI tests.
-* `tests/api/` — API tests when they are introduced.
+* `tests/api/` — API tests.
+* `playwright-utils/` — support code for tests: `pages/` (Page Objects), `api/` (API clients), `fixtures/` (`PageManager`, `ApiManager`, and the custom `pom`/`api` fixtures). See `.claude/rules/playwright-architecture.md` for conventions.
 * `.github/workflows/playwright.yml` — GitHub Actions workflow for automated test execution.
 * `playwright-report/` — generated HTML report output.
 * `test-results/` — generated test artifacts and failure output.
@@ -106,6 +107,8 @@ Follow these principles throughout the project:
 ## Architecture Rules
 
 Do not introduce abstractions prematurely.
+
+These constraints applied to the first UI tests, before a Page Object Model existed. A POM and custom fixtures have since been introduced — for current conventions when adding to or extending them, follow `.claude/rules/playwright-architecture.md` instead. The principle below (introduce shared functionality only after real duplication) still applies to any new area of the framework starting from scratch.
 
 For the first UI tests:
 
