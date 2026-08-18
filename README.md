@@ -128,7 +128,7 @@ The current UI abstraction covers the login flow through `LoginPage`, article au
 
 ## Authentication
 
-UI credentials are provided through environment variables:
+Credentials for the Conduit test user are provided through environment variables:
 
 ```text id="i8z7ge"
 CONDUIT_USER_EMAIL
@@ -136,6 +136,25 @@ CONDUIT_USER_PASSWORD
 ```
 
 Sensitive credentials are not stored in the repository.
+
+### Local setup
+
+1. Copy `.env.example` to `.env`:
+   ```bash
+   cp .env.example .env
+   ```
+2. Fill in `CONDUIT_USER_EMAIL` and `CONDUIT_USER_PASSWORD` in `.env` with a real Conduit test account.
+
+`.env` is listed in `.gitignore` and must never be committed. Tests that require these credentials skip automatically (with a clear message) if they are not set.
+
+### GitHub Actions setup
+
+The workflow reads the same two variables from repository secrets. To enable the credentialed tests in CI, add them under **Settings → Secrets and variables → Actions**:
+
+* `CONDUIT_USER_EMAIL`
+* `CONDUIT_USER_PASSWORD`
+
+Without these secrets configured, the credentialed tests will continue to skip in CI.
 
 ## Installation
 

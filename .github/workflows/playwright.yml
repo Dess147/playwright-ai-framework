@@ -20,6 +20,9 @@ jobs:
       run: npx playwright install --with-deps
     - name: Run Playwright tests
       run: npm test
+      env:
+        CONDUIT_USER_EMAIL: ${{ secrets.CONDUIT_USER_EMAIL }}
+        CONDUIT_USER_PASSWORD: ${{ secrets.CONDUIT_USER_PASSWORD }}
     - uses: actions/upload-artifact@v4
       if: failure()
       with:

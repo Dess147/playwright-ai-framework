@@ -1,6 +1,9 @@
 # Claude
 .claude/settings.local.json
 
+# Environment
+.env
+
 # Playwright
 node_modules/
 /test-results/
