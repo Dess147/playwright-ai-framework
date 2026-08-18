@@ -1,13 +1,8 @@
 import { test, expect } from '@playwright/test';
+import { getConduitCredentials } from '../../playwright-utils/helpers/credentials';
 
 test('user can publish an article with title, description, body and two tags, and see it in the Global Feed', async ({ page }) => {
-  const email = process.env.CONDUIT_USER_EMAIL;
-  const password = process.env.CONDUIT_USER_PASSWORD;
-
-  test.skip(
-    !email || !password,
-    'CONDUIT_USER_EMAIL and CONDUIT_USER_PASSWORD must be set to run this test'
-  );
+  const { email, password } = getConduitCredentials();
 
   const articleTitle = `Playwright Coverage Test Article ${Date.now()}`;
   const articleBody = 'Body content written by the Playwright coverage test.';
@@ -15,8 +10,8 @@ test('user can publish an article with title, description, body and two tags, an
   await page.goto('/');
 
   await page.getByRole('link', { name: 'Sign in' }).click();
-  await page.getByPlaceholder('Email').fill(email!);
-  await page.getByPlaceholder('Password').fill(password!);
+  await page.getByPlaceholder('Email').fill(email);
+  await page.getByPlaceholder('Password').fill(password);
   await page.getByRole('button', { name: 'Sign in' }).click();
 
   await page.getByRole('link', { name: 'New Article' }).click();

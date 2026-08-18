@@ -1,13 +1,8 @@
 import { test, expect } from '../../playwright-utils/fixtures';
+import { getConduitCredentials } from '../../playwright-utils/helpers/credentials';
 
 test('signed-in user can edit their own article', async ({ pom }) => {
-  const email = process.env.CONDUIT_USER_EMAIL;
-  const password = process.env.CONDUIT_USER_PASSWORD;
-
-  test.skip(
-    !email || !password,
-    'CONDUIT_USER_EMAIL and CONDUIT_USER_PASSWORD must be set to run this test'
-  );
+  const { email, password } = getConduitCredentials();
 
   const description = 'A description written by the Playwright edit test';
   const originalTitle = `Playwright Edit Test Article ${Date.now()}`;
@@ -15,7 +10,7 @@ test('signed-in user can edit their own article', async ({ pom }) => {
   const updatedTitle = `Playwright Edit Test Article Updated ${Date.now()}`;
   const updatedBody = 'Updated body content written by the Playwright edit test.';
 
-  await pom.loginPage.signInWithCredentials(email!, password!);
+  await pom.loginPage.signInWithCredentials(email, password);
   await pom.loginPage.expectSignedInSuccessfully();
 
   await pom.headerComponent.openNewArticleEditor();

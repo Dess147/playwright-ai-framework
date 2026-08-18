@@ -1,19 +1,14 @@
 import { test, expect } from '../../playwright-utils/fixtures';
+import { getConduitCredentials } from '../../playwright-utils/helpers/credentials';
 
 test('signed-in user can delete their own article', async ({ page, pom }) => {
-  const email = process.env.CONDUIT_USER_EMAIL;
-  const password = process.env.CONDUIT_USER_PASSWORD;
-
-  test.skip(
-    !email || !password,
-    'CONDUIT_USER_EMAIL and CONDUIT_USER_PASSWORD must be set to run this test'
-  );
+  const { email, password } = getConduitCredentials();
 
   const description = 'A description written by the Playwright delete test';
   const articleTitle = `Playwright Delete Test Article ${Date.now()}`;
   const articleBody = 'Body content written by the Playwright delete test.';
 
-  await pom.loginPage.signInWithCredentials(email!, password!);
+  await pom.loginPage.signInWithCredentials(email, password);
   await pom.loginPage.expectSignedInSuccessfully();
 
   await pom.headerComponent.openNewArticleEditor();
