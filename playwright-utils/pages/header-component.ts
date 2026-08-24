@@ -1,4 +1,4 @@
-  import { type Page, expect } from '@playwright/test';
+import { type Page, expect } from '@playwright/test';
 
 export class HeaderComponent {
   constructor(private page: Page) {}
