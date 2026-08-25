@@ -12,3 +12,7 @@ node_modules/
 /playwright/.cache/
 /playwright/.auth/
 .claude/implementation-plan.md
+
+# Local debug scratch (pw-debug-actions skill)
+.playwright-cli/
+.pw-ci-debug/
