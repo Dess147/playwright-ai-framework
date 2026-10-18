@@ -18,7 +18,8 @@ test('user can publish an article with title, description, body and two tags, an
   await expect(page.getByText('playwright', { exact: true })).toBeVisible();
   await expect(page.getByText('automation', { exact: true })).toBeVisible();
 
-  await page.getByRole('link', { name: 'Home' }).click();
+  // await page.getByRole('link', { name: 'Home' }).click();
+  await pom.headerComponent.openHome();
   await page.getByText('Global Feed', { exact: true }).click();
   await expect(page.getByRole('heading', { name: articleTitle })).toBeVisible();
 
