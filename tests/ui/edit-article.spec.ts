@@ -17,6 +17,7 @@ test('signed-in user can edit their own article', async ({ pom }) => {
   await pom.articleEditorPage.fillAndPublish(originalTitle, description, originalBody);
 
   await pom.articlePage.openEditor();
+  await pom.articleEditorPage.expectArticleLoaded(originalTitle);
   await pom.articleEditorPage.fillAndPublish(updatedTitle, description, updatedBody);
 
   await pom.articlePage.expectArticleVisible(updatedTitle, updatedBody);
