@@ -14,7 +14,9 @@ test('signed-in user can delete their own article', async ({ page, pom }) => {
   await pom.headerComponent.openNewArticleEditor();
   await pom.articleEditorPage.fillAndPublish(articleTitle, description, articleBody);
 
-  await page.getByRole('link', { name: 'Home' }).click();
+  // await page.getByRole('link', { name: 'Home' }).click();
+  await pom.headerComponent.openHome();
+
   await page.getByText('Global Feed', { exact: true }).click();
   await page.getByRole('link', { name: articleTitle }).click();
 

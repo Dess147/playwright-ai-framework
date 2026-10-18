@@ -3,6 +3,12 @@ import { type Page, expect } from '@playwright/test';
 export class ArticleEditorPage {
   constructor(private page: Page) {}
 
+    async expectArticleLoaded(title: string) {
+    await expect(
+      this.page.getByPlaceholder('Article Title')
+    ).toHaveValue(title);
+  }
+  
   async fillAndPublish(title: string, description: string, body: string, tags: string[] = []) {
     await this.page.getByPlaceholder("What's this article about?").fill(description);
     await this.page.getByPlaceholder('Write your article (in markdown)').fill(body);

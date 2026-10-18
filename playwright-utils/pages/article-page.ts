@@ -15,6 +15,6 @@ export class ArticlePage {
 
   async expectArticleVisible(title: string, body: string) {
     await expect(this.page.getByRole('heading', { name: title })).toBeVisible();
-    await expect(this.page.locator('p', { hasText: body })).toHaveText(body);
+    await expect(this.page.getByText(body, { exact: true })).toBeVisible();
   }
 }
